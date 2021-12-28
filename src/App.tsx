@@ -1,5 +1,5 @@
 import GUN from "gun";
-import { useState, useEffect, ChangeEvent, useRef } from "react";
+import { useEffect, ChangeEvent, useRef } from "react";
 import Home from "./components/Home";
 
 const database = GUN({ peers: ["https://missopad-server.herokuapp.com/gun"] });
