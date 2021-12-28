@@ -1,26 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import GUN from "gun";
+import { useState, useEffect, ChangeEvent, useRef } from "react";
+import Home from "./components/Home";
+
+const database = GUN({ peers: ["https://missopad-server.herokuapp.com/gun"] });
+
+const location = window.location.pathname;
+
+const unescapeNewLine = (str: string) =>
+  str.replace(/\\n/g, "\n").replace(/\\r/g, "\r");
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const unregister = database.get(location).on((page) => {
+      if (page?.content && textAreaRef.current) {
+        textAreaRef.current.innerHTML = unescapeNewLine(page.content);
+      }
+    });
+
+    return () => unregister?.off();
+  }, []);
+
+  function handleTextChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    const text = e.target.value;
+
+    database.get(location).put({
+      content: unescapeNewLine(text),
+    });
+  }
+
+  function HomeOrText() {
+    if (location === "/") {
+      return <Home />;
+    }
+
+    return (
+      <textarea
+        ref={textAreaRef}
+        aria-multiline
+        wrap="hard"
+        onChange={handleTextChange}
+      />
+    );
+  }
+
+  return <HomeOrText />;
 }
 
 export default App;
