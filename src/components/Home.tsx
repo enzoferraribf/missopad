@@ -1,13 +1,23 @@
-import { ChangeEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 function Home() {
   const [document, setDocument] = useState<string>("");
+
+  const navigate = useNavigate();
 
   function handleDocumentChange(e: ChangeEvent<HTMLInputElement>) {
     const document = e.target.value;
 
     setDocument(document);
   }
+
+  function handleFormSubmit(e: FormEvent) {
+    e.preventDefault();
+
+    navigate(`/${document}`);
+  }
+
   return (
     <div
       style={{
@@ -27,7 +37,7 @@ function Home() {
           flexDirection: "row",
         }}
       >
-        <form>
+        <form onSubmit={handleFormSubmit}>
           <label style={{ fontSize: "5vw", marginRight: "10px" }}>
             missopad.com/
           </label>

@@ -1,15 +1,17 @@
 import unescapeJs from "unescape-js";
-import { useEffect, ChangeEvent, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { onValue, ref, set } from "firebase/database";
-import { db } from "../services/firebase";
+import { useEffect, ChangeEvent, useRef } from "react";
 
-const location = window.location.pathname;
+import { db } from "../services/firebase";
 
 function Pad() {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
+  const { pathname } = useLocation();
+
   useEffect(() => {
-    const dbRef = ref(db, location);
+    const dbRef = ref(db, pathname);
 
     const unsubscribe = onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
@@ -25,7 +27,7 @@ function Pad() {
   async function handleTextChange(e: ChangeEvent<HTMLTextAreaElement>) {
     const text = e.target.value;
 
-    await set(ref(db, location), { content: text });
+    await set(ref(db, pathname), { content: text });
   }
 
   return (
