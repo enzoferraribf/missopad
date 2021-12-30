@@ -19,7 +19,7 @@ function Home() {
         width: "100vw",
       }}
     >
-      <h1 style={{ marginBottom: "20px", fontSize: "50px" }}>MISSOPAD</h1>
+      <h1 style={{ marginBottom: "20px", fontSize: "10vw" }}>MISSOPAD</h1>
 
       <div
         style={{
@@ -28,12 +28,12 @@ function Home() {
         }}
       >
         <form>
-          <label style={{ fontSize: "25px", marginRight: "10px" }}>
+          <label style={{ fontSize: "5vw", marginRight: "10px" }}>
             missopad.com/
           </label>
 
           <input
-            style={{ fontSize: "15px", padding: "5px" }}
+            style={{ fontSize: "3vw", padding: "5px" }}
             type="text"
             placeholder="document..."
             value={document}
@@ -45,7 +45,7 @@ function Home() {
               textDecoration: "none",
               color: "black",
               marginLeft: "10px",
-              fontSize: "15px",
+              fontSize: "3vw",
               padding: "5px",
               border: "1px solid black",
               backgroundColor: "#eee",
