@@ -1,12 +1,10 @@
 import GUN from "gun";
+import unescapeJs from "unescape-js";
 import { useEffect, ChangeEvent, useRef } from "react";
 
 const database = GUN({ peers: ["https://missopad-server.herokuapp.com/gun"] });
 
 const location = window.location.pathname;
-
-const unescapeNewLine = (str: string) =>
-  str.replace(/\\n/g, "\n").replace(/\\r/g, "\r");
 
 function Pad() {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -14,7 +12,7 @@ function Pad() {
   useEffect(() => {
     const unregister = database.get(location).on((page) => {
       if (page?.content && textAreaRef.current) {
-        textAreaRef.current.innerHTML = unescapeNewLine(page.content);
+        textAreaRef.current.innerHTML = unescapeJs(page.content);
       }
     });
 
@@ -25,7 +23,7 @@ function Pad() {
     const text = e.target.value;
 
     database.get(location).put({
-      content: unescapeNewLine(text),
+      content: text,
     });
   }
 

@@ -19,6 +19,7 @@
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
     "typescript": "^4.4.2",
+    "unescape-js": "^1.1.4",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
