@@ -1,4 +1,3 @@
-import unescapeJs from "unescape-js";
 import { useLocation } from "react-router-dom";
 import { onValue, ref, set } from "firebase/database";
 import { useEffect, ChangeEvent, useRef } from "react";
@@ -17,12 +16,12 @@ function Pad() {
       const data = snapshot.val();
 
       if (textAreaRef.current) {
-        textAreaRef.current.innerHTML = unescapeJs(data.content);
+        textAreaRef.current.innerHTML = data.content;
       }
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [pathname]);
 
   async function handleTextChange(e: ChangeEvent<HTMLTextAreaElement>) {
     const text = e.target.value;
