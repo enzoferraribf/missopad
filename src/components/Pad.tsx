@@ -1,11 +1,11 @@
 import { useLocation } from "react-router-dom";
 import { onValue, ref, set } from "firebase/database";
-import { useEffect, ChangeEvent, useRef } from "react";
+import { useEffect, ChangeEvent, useState } from "react";
 
 import { db } from "../services/firebase";
 
 function Pad() {
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const [textAreaContent, setTextAreaContent] = useState<string>("");
 
   const { pathname } = useLocation();
 
@@ -15,9 +15,7 @@ function Pad() {
     const unsubscribe = onValue(dbRef, (snapshot) => {
       const data = snapshot.val();
 
-      if (textAreaRef.current) {
-        textAreaRef.current.innerHTML = data.content;
-      }
+      setTextAreaContent(data.content);
     });
 
     return () => unsubscribe();
@@ -31,7 +29,7 @@ function Pad() {
 
   return (
     <textarea
-      ref={textAreaRef}
+      value={textAreaContent}
       aria-multiline
       wrap="hard"
       onChange={handleTextChange}
