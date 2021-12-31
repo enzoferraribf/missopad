@@ -45,15 +45,11 @@ function Pad() {
 
     const dbRef = ref(db, pathname);
 
-    await runTransaction(
-      dbRef,
-      (snapshot) => {
-        snapshot = { content: text };
+    await runTransaction(dbRef, (snapshot) => {
+      snapshot = { content: text };
 
-        return snapshot;
-      },
-      { applyLocally: false }
-    );
+      return snapshot;
+    });
   }
 
   return (
