@@ -1,10 +1,12 @@
 import { useLocation } from "react-router-dom";
 import { onValue, ref, runTransaction } from "firebase/database";
-import { useEffect, ChangeEvent, useState } from "react";
+import { useEffect, ChangeEvent, useState, useRef } from "react";
 
 import { db } from "../services/firebase";
 
 function Pad() {
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
   const [textAreaContent, setTextAreaContent] = useState<string>("");
 
   const { pathname } = useLocation();
@@ -13,10 +15,25 @@ function Pad() {
     const dbRef = ref(db, pathname);
 
     const unsubscribe = onValue(dbRef, (snapshot) => {
-      if (snapshot) {
-        const data = snapshot.val();
+      const textArea = textAreaRef.current;
 
-        setTextAreaContent(data.content);
+      if (snapshot && textArea) {
+        const { content: serverContent } = snapshot.val();
+        const localContent = textArea.value;
+
+        let previousPosition = textArea.selectionEnd;
+
+        const beforeCaret = localContent.substring(0, previousPosition);
+        const newBeforeCaret = serverContent.substring(0, previousPosition);
+
+        if (beforeCaret !== newBeforeCaret) {
+          previousPosition += serverContent.length - localContent.length;
+        }
+
+        setTextAreaContent(serverContent);
+
+        textArea.selectionStart = previousPosition;
+        textArea.selectionEnd = previousPosition;
       }
     });
 
@@ -37,6 +54,7 @@ function Pad() {
 
   return (
     <textarea
+      ref={textAreaRef}
       value={textAreaContent}
       aria-multiline
       wrap="hard"
