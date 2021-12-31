@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { onValue, ref, set } from "firebase/database";
+import { onValue, ref, runTransaction } from "firebase/database";
 import { useEffect, ChangeEvent, useState } from "react";
 
 import { db } from "../services/firebase";
@@ -13,9 +13,11 @@ function Pad() {
     const dbRef = ref(db, pathname);
 
     const unsubscribe = onValue(dbRef, (snapshot) => {
-      const data = snapshot.val();
+      if (snapshot) {
+        const data = snapshot.val();
 
-      setTextAreaContent(data.content);
+        setTextAreaContent(data.content);
+      }
     });
 
     return () => unsubscribe();
@@ -24,7 +26,13 @@ function Pad() {
   async function handleTextChange(e: ChangeEvent<HTMLTextAreaElement>) {
     const text = e.target.value;
 
-    await set(ref(db, pathname), { content: text });
+    const dbRef = ref(db, pathname);
+
+    await runTransaction(dbRef, (snapshot) => {
+      snapshot = { content: text };
+
+      return snapshot;
+    });
   }
 
   return (
