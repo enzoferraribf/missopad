@@ -22,3 +22,11 @@ textarea {
   height: 99vh;
   white-space: pre-wrap;
 }
+
+textarea:disabled {
+  background: #ffffff;
+}
+
+span {
+  text-transform: none !important;
+}

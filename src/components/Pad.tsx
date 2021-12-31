@@ -1,61 +1,83 @@
+import { nanoid } from "nanoid";
+import { useAlert } from "react-alert";
 import { useLocation } from "react-router-dom";
-import { onValue, ref, runTransaction } from "firebase/database";
-import { useEffect, ChangeEvent, useState, useRef } from "react";
+import { get, onValue, ref } from "firebase/database";
+import { useEffect, ChangeEvent, useState } from "react";
 
 import { db } from "../services/firebase";
+import { ServerDoc } from "../types/ServerDoc";
+
+import { handleWriting } from "../utils/writing";
+import { lessThan } from "../utils/time";
+
+const USER_ID = nanoid(5);
+const POLL_TIME = 3000;
 
 function Pad() {
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-
-  const [textAreaContent, setTextAreaContent] = useState<string>("");
-
+  const alert = useAlert();
   const { pathname } = useLocation();
+
+  const [content, setContent] = useState<string>("");
+
+  const [disabled, setDisabled] = useState<boolean>(false);
 
   useEffect(() => {
     const dbRef = ref(db, pathname);
 
     const unsubscribe = onValue(dbRef, (snapshot) => {
-      const textArea = textAreaRef.current;
+      if (!snapshot) return;
 
-      if (snapshot && textArea) {
-        const { content: serverContent } = snapshot.val();
-        const localContent = textArea.value;
+      const serverDoc: ServerDoc = snapshot.val();
 
-        let previousPosition = textArea.selectionEnd;
-
-        const beforeCaret = localContent.substring(0, previousPosition);
-        const newBeforeCaret = serverContent.substring(0, previousPosition);
-
-        if (beforeCaret !== newBeforeCaret) {
-          previousPosition += serverContent.length - localContent.length;
-        }
-
-        setTextAreaContent(serverContent);
-
-        textArea.selectionStart = previousPosition;
-        textArea.selectionEnd = previousPosition;
-      }
+      setContent(serverDoc.content);
+      handleDisable(serverDoc);
     });
 
-    return () => unsubscribe();
+    const interval = setInterval(async () => {
+      const snapshot = await get(dbRef);
+
+      const serverDoc: ServerDoc = snapshot.val();
+
+      handleDisable(serverDoc);
+    }, POLL_TIME);
+
+    return () => {
+      unsubscribe();
+      clearInterval(interval);
+    };
   }, [pathname]);
+
+  useEffect(() => {
+    if (!disabled) {
+      (alert as any).removeAll();
+    }
+
+    const alertsActive = alert.alerts.length;
+
+    if (disabled && !alertsActive) {
+      alert.show("someone is typing, hold on");
+    }
+  }, [disabled]);
+
+  function handleDisable(serverDoc: ServerDoc) {
+    const isDifferentAuthor = serverDoc.author !== USER_ID;
+
+    const newDisabled =
+      isDifferentAuthor && lessThan(serverDoc.updatedAt, POLL_TIME);
+
+    setDisabled(newDisabled);
+  }
 
   async function handleTextChange(e: ChangeEvent<HTMLTextAreaElement>) {
     const text = e.target.value;
 
-    const dbRef = ref(db, pathname);
-
-    await runTransaction(dbRef, (snapshot) => {
-      snapshot = { content: text };
-
-      return snapshot;
-    });
+    await handleWriting(pathname, { content: text, author: USER_ID });
   }
 
   return (
     <textarea
-      ref={textAreaRef}
-      value={textAreaContent}
+      disabled={disabled}
+      value={content}
       aria-multiline
       wrap="hard"
       onChange={handleTextChange}
