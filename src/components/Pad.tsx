@@ -4,14 +4,22 @@ import { useLocation } from "react-router-dom";
 import { get, onValue, ref } from "firebase/database";
 import { useEffect, ChangeEvent, useState } from "react";
 
+import ReactMarkdown from "react-markdown";
+import RemarkGfm from "remark-gfm";
+import RemarkBreaks from "remark-breaks"
+
 import { db } from "../services/firebase";
 import { ServerDoc } from "../types/ServerDoc";
 
 import { handleWriting } from "../utils/writing";
 import { lessThan } from "../utils/time";
 
+import 'github-markdown-css'
+
 const USER_ID = nanoid(5);
 const POLL_TIME = 3000;
+
+
 
 function Pad() {
   const alert = useAlert();
@@ -75,13 +83,22 @@ function Pad() {
   }
 
   return (
-    <textarea
-      disabled={disabled}
-      value={content}
-      aria-multiline
-      wrap="hard"
-      onChange={handleTextChange}
-    />
+    <div style={{ display: 'flex', flexDirection: "row" }}>
+      <textarea
+        disabled={disabled}
+        value={content}
+        aria-multiline
+        wrap="hard"
+        onChange={handleTextChange}
+      />
+
+      <div style={{ paddingLeft: 30, paddingRight: 30, paddingTop: 10, width: "50vw" }} className="markdown-body">
+        <ReactMarkdown
+          children={content}
+          remarkPlugins={[RemarkGfm, RemarkBreaks]}
+        />
+      </div>
+    </div>
   );
 }
 
