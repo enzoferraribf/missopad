@@ -1,6 +1,25 @@
 * {
   box-sizing: border-box;
   font-family: 'JetBrains Mono', monospace !important;
+
+
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px black;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #191f29;
+  border-radius: 10px;
 }
 
 body {
@@ -16,9 +35,9 @@ textarea {
   outline: none;
   resize: none;
   width: 50vw;
-  min-height: 100vh;
+  height: 100vh;
+  overflow-y: scroll;
   white-space: pre-wrap;
-  border-right: 3px solid black;
   background-color: #0d1117;
   color: #c9d1d9;
   padding: 30px
