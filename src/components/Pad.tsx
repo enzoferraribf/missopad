@@ -2,7 +2,7 @@ import { nanoid } from "nanoid";
 import { useAlert } from "react-alert";
 import { useLocation } from "react-router-dom";
 import { get, onValue, ref } from "firebase/database";
-import { useEffect, ChangeEvent, useState } from "react";
+import { useEffect, ChangeEvent, useState, MouseEventHandler } from "react";
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
@@ -31,6 +31,8 @@ function Pad() {
   const [content, setContent] = useState<string>("");
 
   const [disabled, setDisabled] = useState<boolean>(false);
+
+  const [onlyView, setOnlyView] = useState<boolean>(false);
 
   useEffect(() => {
     const dbRef = ref(db, pathname);
@@ -85,39 +87,49 @@ function Pad() {
     await handleWriting(pathname, { content: text, author: USER_ID });
   }
 
-  return (
-    <div style={{ display: 'flex', flexDirection: "row" }}>
-      <textarea
-        disabled={disabled}
-        value={content}
-        aria-multiline
-        wrap="hard"
-        onChange={handleTextChange}
-      />
 
-      <div style={{ padding: 30, width: "50vw", height: "100vh", overflowY: "scroll" }} className="markdown-body">
-        <ReactMarkdown
-          children={content}
-          remarkPlugins={[RemarkGfm, RemarkBreaks]}
-          components={{
-            code({ node, inline, className, children, ...props }) {
-              const match = /language-(\w+)/.exec(className || '')
-              return !inline && match ? (
-                <SyntaxHighlighter
-                  children={String(children).replace(/\n$/, '')}
-                  style={dracula}
-                  language={match[1]}
-                  PreTag="div"
-                  {...props}
-                />
-              ) : (
-                <code className={className} {...props}>
-                  {children}
-                </code>
-              )
-            }
-          }}
-        />
+  return (
+    <div>
+      <header style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '99vw', height: '3vh', padding: '2vh' }}>
+        <h2 className="logo" onClick={() => setOnlyView(!onlyView)}>MISSOPAD </h2>
+        {onlyView && "👀"}
+      </header>
+
+      <div style={{ display: 'flex', flexDirection: "row" }}>
+
+        {!onlyView && <textarea
+          disabled={disabled}
+          value={content}
+          aria-multiline
+          wrap="hard"
+          onChange={handleTextChange}
+        />}
+
+
+        <div style={{ padding: 30, width: onlyView ? "100vw" : "50vw", height: "96vh", overflowY: "scroll" }} className="markdown-body">
+          <ReactMarkdown
+            children={content}
+            remarkPlugins={[RemarkGfm, RemarkBreaks]}
+            components={{
+              code({ node, inline, className, children, ...props }) {
+                const match = /language-(\w+)/.exec(className || '')
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    children={String(children).replace(/\n$/, '')}
+                    style={dracula}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
+                  />
+                ) : (
+                  <code className={className} {...props}>
+                    {children}
+                  </code>
+                )
+              }
+            }}
+          />
+        </div>
       </div>
     </div>
   );
