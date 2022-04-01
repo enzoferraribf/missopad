@@ -95,7 +95,7 @@ function Pad() {
         onChange={handleTextChange}
       />
 
-      <div style={{ paddingLeft: 30, paddingRight: 30, paddingTop: 30, width: "50vw", height: "100vh", overflowY: "scroll" }} className="markdown-body">
+      <div style={{ padding: 30, width: "50vw", height: "100vh", overflowY: "scroll" }} className="markdown-body">
         <ReactMarkdown
           children={content}
           remarkPlugins={[RemarkGfm, RemarkBreaks]}
