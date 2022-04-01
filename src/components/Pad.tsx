@@ -3,10 +3,13 @@ import { useAlert } from "react-alert";
 import { useLocation } from "react-router-dom";
 import { get, onValue, ref } from "firebase/database";
 import { useEffect, ChangeEvent, useState } from "react";
+import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 import ReactMarkdown from "react-markdown";
 import RemarkGfm from "remark-gfm";
-import RemarkBreaks from "remark-breaks"
+import RemarkBreaks from "remark-breaks";
+
 
 import { db } from "../services/firebase";
 import { ServerDoc } from "../types/ServerDoc";
@@ -96,6 +99,24 @@ function Pad() {
         <ReactMarkdown
           children={content}
           remarkPlugins={[RemarkGfm, RemarkBreaks]}
+          components={{
+            code({ node, inline, className, children, ...props }) {
+              const match = /language-(\w+)/.exec(className || '')
+              return !inline && match ? (
+                <SyntaxHighlighter
+                  children={String(children).replace(/\n$/, '')}
+                  style={dracula}
+                  language={match[1]}
+                  PreTag="div"
+                  {...props}
+                />
+              ) : (
+                <code className={className} {...props}>
+                  {children}
+                </code>
+              )
+            }
+          }}
         />
       </div>
     </div>
