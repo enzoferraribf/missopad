@@ -15,6 +15,20 @@ Missopad is a real-time collaborative tool that renders Markdown. You can access
 
 # How to contribute
 
-The whole project is hosted on firebase. The main credentials **will not work** on your local machine, so use the [Firebase Emulator](https://firebase.google.com/docs/emulator-suite/connect_and_prototype) or your own project to run the app.
+The whole project is hosted on firebase. The main credentials, located at `src/services/firebase.ts` **will not work** on your local machine:
+
+```ts
+const firebaseConfig = {
+  apiKey: "",
+  authDomain: "",
+  databaseURL: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: "",
+};
+```
+
+Use the [Firebase Emulator](https://firebase.google.com/docs/emulator-suite/connect_and_prototype) or your own project credentials to run the app.
 
 Please open a PR describing the changes and your new features. Any help will be much apreciated 😀
