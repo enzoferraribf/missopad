@@ -31,6 +31,6 @@ const firebaseConfig = {
 
 Use the [Firebase Emulator](https://firebase.google.com/docs/emulator-suite/connect_and_prototype) or your own project credentials to run the app.
 
-For more information about how to install and configure Firebase, we've made a special md to help you achieve that, see [Firebase Config](https://github.com/oenzoferrari/missopad/blob/main/FIREBASE_CONFIG.md)
+For more information about how to install and configure Firebase, we've made a special md to help you achieve that, see [Firebase Config](https://github.com/oenzoferrari/missopad/blob/main/CONFIG.md)
 
 Please open a PR describing the changes and your new features. Any help will be much apreciated 😀
