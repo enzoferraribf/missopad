@@ -43,7 +43,7 @@ It will prompt some questions:
 
     1) You choose yes or no
     2) Select only Emulators, since we want to run it only locally
-    3) Select Authentication, Database and Hosting Emulators
+    3) Select Authentication and Database Emulators
     4) Leave everything default and install emulator
 
 2) Get Credentials, copy and paste it on src/services/Firebase.ts
