@@ -9,13 +9,13 @@
 
 ## Setup Firebase
 
-1) Run this command to install Firebase globally.
+1) Run this command to install Firebase globally with npm.
 
 ```
 npm install -g firebase-tools
 ```
 
-2) Install firebase tools
+2) Install firebase tools with yarn
 
 ```
 yarn global add firebase-tools
