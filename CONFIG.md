@@ -81,6 +81,6 @@ const firebaseConfig = {
 
 ## Testing Firebase Configuration
 
-Start missopad application and try creating a page, it should appear the data you inserted on Firebase UI Emulator.
+Start missopad application with `npm run start` and try creating a page, it should appear the data you inserted on Firebase UI Emulator.
 
 If you get there, congratulations! You've successfully installed and configured Firebase, now it's time to start coding and make missopad better!
