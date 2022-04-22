@@ -104,17 +104,21 @@ function Pad() {
           padding: "2vh",
         }}
       >
-        <h3 style={{ position: "absolute", top: -10, left: 10, zIndex: 9999 }} className="logo" onClick={() => setMissogates(!missogates)}>✈️{missogates ? " missogates" : ""}</h3>
+        <h3
+          style={{ position: "absolute", top: -10, left: 10, zIndex: 9999 }}
+          className="logo"
+          onClick={() => setMissogates(!missogates)}
+        >
+          ✈️{missogates ? " missogates" : ""}
+        </h3>
         <h2 className="logo" onClick={() => setOnlyView(!onlyView)}>
           MISSOPAD{" "}
         </h2>
         {onlyView && "👀"}
       </header>
 
-      {missogates ?
-        <Tree />
-      : <></>}
-      
+      {missogates ? <Tree /> : <></>}
+
       <div style={{ display: "flex", flexDirection: "row" }}>
         {!onlyView && (
           <textarea
