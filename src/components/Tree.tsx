@@ -5,6 +5,9 @@ import { db } from "../services/firebase";
 import { DataSnapshot, get, ref } from "firebase/database";
 
 function Tree() {
+  const ROOT_SYMBOL = ".\\";
+  const CHILD_SYMBOL = "↳ ";
+
   const { pathname } = useLocation();
 
   const [routes, setRoutes] = useState<DataSnapshot[]>([]);
@@ -18,31 +21,29 @@ function Tree() {
   }, []);
 
   function getDataSnapshotArray(node: DataSnapshot): DataSnapshot[] {
-    const childs: DataSnapshot[] = [];
+    const children: DataSnapshot[] = [];
     node.forEach((child) => {
       if (child.size > 0) {
-        childs.push(child);
+        children.push(child);
       }
     });
-    return childs;
+    return children;
   }
 
   function getTree() {
-    return routes.map((route) => {
-      if (route.size > 0) {
-        return (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {mountTree(route)}
-          </div>
-        );
-      }
-    });
+    return routes
+      .filter((route) => route.size > 0)
+      .map((route) => {
+        return <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {mountTree(route)}
+        </div>;
+      });
   }
 
   function getRouteLink(
@@ -61,7 +62,7 @@ function Tree() {
           marginLeft: level - 1 + "em",
         }}
       >
-        {(level === 1 ? ".\\" : "↳ ") + route.key}
+        {(level === 1 ? ROOT_SYMBOL : CHILD_SYMBOL) + route.key}
       </a>
     );
   }
@@ -73,12 +74,12 @@ function Tree() {
   ): JSX.Element {
     if (recursion > 3) return <></>;
 
-    const childs: DataSnapshot[] = getDataSnapshotArray(node);
+    const children: DataSnapshot[] = getDataSnapshotArray(node);
 
     return (
       <>
         {getRouteLink(node, subpath, recursion++)}
-        {childs.map((route) => {
+        {children.map((route) => {
           return mountTree(route, subpath + "/" + node.key, recursion);
         })}
       </>
@@ -101,7 +102,7 @@ function Tree() {
       }}
     >
       {getTree()}
-      {routes.length == 0 ? <p>no gates here :(</p> : <></>}
+      {routes.length == 0 && <p>no gates here :(</p>}
     </div>
   );
 }

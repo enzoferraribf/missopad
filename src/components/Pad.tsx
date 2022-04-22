@@ -33,7 +33,7 @@ function Pad() {
 
   const [onlyView, setOnlyView] = useState<boolean>(false);
 
-  const [missogates, setMissogates] = useState<boolean>(false);
+  const [showMissogates, setShowMissogates] = useState<boolean>(false);
 
   useEffect(() => {
     signInAnonymously(auth);
@@ -107,9 +107,9 @@ function Pad() {
         <h3
           style={{ position: "absolute", top: -10, left: 10, zIndex: 9999 }}
           className="logo"
-          onClick={() => setMissogates(!missogates)}
+          onClick={() => setShowMissogates(!showMissogates)}
         >
-          ✈️{missogates ? " missogates" : ""}
+          ✈️{showMissogates && " missogates"}
         </h3>
         <h2 className="logo" onClick={() => setOnlyView(!onlyView)}>
           MISSOPAD{" "}
@@ -117,7 +117,7 @@ function Pad() {
         {onlyView && "👀"}
       </header>
 
-      {missogates ? <Tree /> : <></>}
+      {showMissogates && <Tree />}
 
       <div style={{ display: "flex", flexDirection: "row" }}>
         {!onlyView && (
