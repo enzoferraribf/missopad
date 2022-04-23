@@ -33,8 +33,8 @@ function Tree() {
   function getTree() {
     return routes
       .filter((route) => route.size > 0)
-      .map((route) => {
-        return <div
+      .map((route) => (
+        <div
           style={{
             display: "flex",
             flexDirection: "column",
@@ -42,8 +42,8 @@ function Tree() {
           }}
         >
           {mountTree(route)}
-        </div>;
-      });
+        </div>)
+      );
   }
 
   function getRouteLink(
