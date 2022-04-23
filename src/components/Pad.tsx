@@ -16,6 +16,8 @@ import { ServerDoc } from "../types/ServerDoc";
 import { handleWriting } from "../utils/writing";
 import { lessThan } from "../utils/time";
 
+import Tree from "./Tree";
+
 import "github-markdown-css";
 
 const USER_ID = nanoid(5);
@@ -30,6 +32,8 @@ function Pad() {
   const [disabled, setDisabled] = useState<boolean>(false);
 
   const [onlyView, setOnlyView] = useState<boolean>(false);
+
+  const [showMissogates, setShowMissogates] = useState<boolean>(false);
 
   useEffect(() => {
     signInAnonymously(auth);
@@ -100,11 +104,20 @@ function Pad() {
           padding: "2vh",
         }}
       >
+        <h3
+          style={{ position: "absolute", top: -10, left: 10, zIndex: 9999 }}
+          className="logo"
+          onClick={() => setShowMissogates(!showMissogates)}
+        >
+          ✈️{showMissogates && " missogates"}
+        </h3>
         <h2 className="logo" onClick={() => setOnlyView(!onlyView)}>
           MISSOPAD{" "}
         </h2>
         {onlyView && "👀"}
       </header>
+
+      {showMissogates && <Tree />}
 
       <div style={{ display: "flex", flexDirection: "row" }}>
         {!onlyView && (
