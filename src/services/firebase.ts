@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
-import { signInAnonymously, getAuth } from "firebase/auth";
+import { connectDatabaseEmulator, getDatabase } from "firebase/database";
+import { signInAnonymously, getAuth, connectAuthEmulator } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDblWst7F3bynCSVn9IX_t_TmLhdjJ7xWU",
@@ -17,5 +17,10 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase();
 
 const auth = getAuth();
+
+if (window.location.hostname === "localhost") {
+  connectDatabaseEmulator(db, "localhost", 9000);
+  connectAuthEmulator(auth, "http://localhost:9099");
+}
 
 export { app, db, signInAnonymously, auth };

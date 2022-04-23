@@ -105,7 +105,7 @@ function Pad() {
         }}
       >
         <h3
-          style={{ position: "absolute", top: -10, left: 10, zIndex: 9999 }}
+          style={{ position: "absolute", top: 10, left: 10, zIndex: 9999 }}
           className="logo"
           onClick={() => setShowMissogates(!showMissogates)}
         >
