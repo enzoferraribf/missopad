@@ -10,7 +10,11 @@ export async function handleWriting(pathname: string, writing: Writing) {
   const dbRef = ref(db, pathname);
 
   await runTransaction(dbRef, (snapshot) => {
-    snapshot = { ...writing, updatedAt: serverTimestamp() };
+    snapshot = {
+      ...snapshot,
+      ...writing,
+      updatedAt: serverTimestamp(),
+    };
 
     return snapshot;
   });

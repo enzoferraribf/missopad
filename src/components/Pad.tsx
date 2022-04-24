@@ -29,6 +29,8 @@ function Pad() {
 
   const [content, setContent] = useState<string>("");
 
+  const [loaded, setLoaded] = useState<boolean>(false);
+
   const [disabled, setDisabled] = useState<boolean>(false);
 
   const [onlyView, setOnlyView] = useState<boolean>(false);
@@ -43,6 +45,8 @@ function Pad() {
     const dbRef = ref(db, pathname);
 
     const unsubscribe = onValue(dbRef, (snapshot) => {
+      setLoaded(true);
+
       if (!snapshot) return;
 
       const serverDoc: ServerDoc = snapshot.val();
@@ -88,6 +92,10 @@ function Pad() {
 
   async function handleTextChange(e: ChangeEvent<HTMLTextAreaElement>) {
     const text = e.target.value;
+
+    if (!loaded) {
+      return;
+    }
 
     await handleWriting(pathname, { content: text, author: USER_ID });
   }
