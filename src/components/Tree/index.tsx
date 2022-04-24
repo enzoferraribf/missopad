@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-import { db } from "../services/firebase";
+import { db } from "services/firebase";
 import { DataSnapshot, get, ref } from "firebase/database";
 
 function Tree() {
@@ -18,7 +18,7 @@ function Tree() {
     get(dbRef).then((value) => {
       setRoutes(getDataSnapshotArray(value));
     });
-  }, []);
+  }, [pathname]);
 
   function getDataSnapshotArray(node: DataSnapshot): DataSnapshot[] {
     const children: DataSnapshot[] = [];
@@ -42,8 +42,8 @@ function Tree() {
           }}
         >
           {mountTree(route)}
-        </div>)
-      );
+        </div>
+      ));
   }
 
   function getRouteLink(
@@ -102,7 +102,7 @@ function Tree() {
       }}
     >
       {getTree()}
-      {routes.length == 0 && <p>no gates here :(</p>}
+      {routes.length === 0 && <p>no gates here :(</p>}
     </div>
   );
 }

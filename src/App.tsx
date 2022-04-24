@@ -1,9 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./components/Home";
-import Pad from "./components/Pad";
-
 import { positions, Provider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
+
+import { Home, Pad } from "components";
 
 const options = {
   timeout: 0,
@@ -16,7 +15,6 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-
           <Route path="/*" element={<Pad />} />
         </Routes>
       </BrowserRouter>

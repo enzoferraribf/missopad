@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { signInAnonymously, auth } from "../services/firebase";
+
+import { signInAnonymously, auth } from "services/firebase";
 
 function Home() {
   const [document, setDocument] = useState<string>("");

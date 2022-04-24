@@ -9,16 +9,16 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import ReactMarkdown from "react-markdown";
 import RemarkGfm from "remark-gfm";
 import RemarkBreaks from "remark-breaks";
-
-import { auth, db, signInAnonymously } from "../services/firebase";
-import { ServerDoc } from "../types/ServerDoc";
-
-import { handleWriting } from "../utils/writing";
-import { lessThan } from "../utils/time";
-
-import Tree from "./Tree";
-
 import "github-markdown-css";
+
+import { Tree } from "components";
+
+import { auth, db, signInAnonymously } from "services/firebase";
+
+import { handleWriting } from "utils/writing";
+import { lessThan } from "utils/time";
+
+import { ServerDoc } from "types/ServerDoc";
 
 const USER_ID = nanoid(5);
 const POLL_TIME = 3000;
@@ -79,7 +79,7 @@ function Pad() {
     if (disabled && !alertsActive) {
       alert.show("someone is typing, hold on");
     }
-  }, [disabled]);
+  }, [alert, disabled]);
 
   function handleDisable(serverDoc: ServerDoc) {
     const isDifferentAuthor = serverDoc.author !== USER_ID;
