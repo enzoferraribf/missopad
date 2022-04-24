@@ -35,6 +35,8 @@ Now you should have everything installed and configured to start using Firebase.
 
 Make sure you're on the root project folder
 
+**IMPORTANT: remove your firebase default project from .firebaserc**
+
 1) Init Firebase project
 
 ```
