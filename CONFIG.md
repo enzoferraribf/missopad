@@ -4,7 +4,9 @@
 
 - Install latest [Java](https://www.java.com/it/download/)
 - Install latest [Node.js](https://nodejs.org/en/)
-- [Firebase](https://firebase.google.com/?hl=pt) Account 
+- [Firebase](https://firebase.google.com/?hl=pt) Account
+- Firebase project (create one at Firebase Console)
+- Create a Firebase app under project configurations
 - Basic knowledge of CLI
 
 ## Setup Firebase
