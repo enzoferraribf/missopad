@@ -1,11 +1,10 @@
 {
-  "name": "react-gun",
+  "name": "missopad",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "firebase": "^9.6.1",
     "github-markdown-css": "^5.1.0",
-    "nanoid": "^3.1.30",
     "react": "^17.0.2",
     "react-alert": "^7.0.3",
     "react-alert-template-basic": "^1.0.2",
