@@ -20,40 +20,7 @@
   border-radius: 10px;
 }
 
-.logo {
-  transition: 0.4s;
-}
-
-.logo:hover {
-  cursor: pointer;
-  opacity: 0.7;
-}
-
 body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
   background-color: #0d1117;
-  color: #c9d1d9;
-}
-
-textarea {
-  border: 3px;
-  outline: none;
-  resize: none;
-  width: 50vw;
-  height: 96vh;
-  overflow-y: scroll;
-  white-space: pre-wrap;
-  background-color: #0d1117;
-  color: #c9d1d9;
-  padding: 30px
-}
-
-textarea:disabled {
-  background: #ffffff;
-}
-
-span {
-  text-transform: none !important;
+  color: #ffffff;
 }

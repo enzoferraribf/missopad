@@ -1,47 +1,67 @@
-import { nanoid } from "nanoid";
 import { useAlert } from "react-alert";
 import { useLocation } from "react-router-dom";
 import { get, onValue, ref } from "firebase/database";
-import { useEffect, ChangeEvent, useState } from "react";
-import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-
-import ReactMarkdown from "react-markdown";
-import RemarkGfm from "remark-gfm";
-import RemarkBreaks from "remark-breaks";
-import "github-markdown-css";
-
-import { Tree } from "components";
+import { useEffect, ChangeEvent, useState, useCallback } from "react";
 
 import { auth, db, signInAnonymously } from "services/firebase";
 
 import { handleWriting } from "utils/writing";
 import { lessThan } from "utils/time";
 
+import { Tree, MarkdownRenderer } from "components";
+import {
+  Editor,
+  HeaderTitle,
+  MissoGatesLogo,
+  PadContainer,
+  PadHeader,
+  Previewer,
+} from "./styles";
+
 import { ServerDoc } from "types/ServerDoc";
 
-const USER_ID = nanoid(5);
 const POLL_TIME = 3000;
 
 function Pad() {
   const alert = useAlert();
+
   const { pathname } = useLocation();
 
-  const [content, setContent] = useState<string>("");
-
-  const [loaded, setLoaded] = useState<boolean>(false);
-
-  const [disabled, setDisabled] = useState<boolean>(false);
-
-  const [onlyView, setOnlyView] = useState<boolean>(false);
-
-  const [showMissogates, setShowMissogates] = useState<boolean>(false);
+  const [content, setContent] = useState("");
+  const [userId, setUserId] = useState("");
+  const [loaded, setLoaded] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+  const [onlyView, setOnlyView] = useState(false);
+  const [showMissogates, setShowMissogates] = useState(false);
 
   useEffect(() => {
-    signInAnonymously(auth);
+    async function signIn() {
+      const { user } = await signInAnonymously(auth);
+      setUserId(user.uid);
+    }
+
+    signIn();
   }, []);
 
+  const handleDisable = useCallback(
+    (serverDoc: ServerDoc) => {
+      if (!userId) return;
+
+      const isDifferentAuthor = serverDoc.author !== userId;
+
+      const newDisabled =
+        isDifferentAuthor && lessThan(serverDoc.updatedAt, POLL_TIME);
+
+      setDisabled(newDisabled);
+    },
+    [userId]
+  );
+
   useEffect(() => {
+    if (!userId) return;
+
+    console.log("Hey!");
+
     const dbRef = ref(db, pathname);
 
     const unsubscribe = onValue(dbRef, (snapshot) => {
@@ -67,7 +87,7 @@ function Pad() {
       unsubscribe();
       clearInterval(interval);
     };
-  }, [pathname]);
+  }, [pathname, userId, handleDisable]);
 
   useEffect(() => {
     if (!disabled) {
@@ -77,59 +97,37 @@ function Pad() {
     const alertsActive = alert.alerts.length;
 
     if (disabled && !alertsActive) {
-      alert.show("someone is typing, hold on");
+      alert.show("someone is typing");
     }
   }, [alert, disabled]);
-
-  function handleDisable(serverDoc: ServerDoc) {
-    const isDifferentAuthor = serverDoc.author !== USER_ID;
-
-    const newDisabled =
-      isDifferentAuthor && lessThan(serverDoc.updatedAt, POLL_TIME);
-
-    setDisabled(newDisabled);
-  }
 
   async function handleTextChange(e: ChangeEvent<HTMLTextAreaElement>) {
     const text = e.target.value;
 
-    if (!loaded) {
-      return;
-    }
+    if (!loaded) return;
 
-    await handleWriting(pathname, { content: text, author: USER_ID });
+    await handleWriting(pathname, { content: text, author: userId });
   }
 
   return (
     <div>
-      <header
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "99vw",
-          height: "3vh",
-          padding: "2vh",
-        }}
-      >
-        <h3
-          style={{ position: "absolute", top: 10, left: 10, zIndex: 9999 }}
-          className="logo"
-          onClick={() => setShowMissogates(!showMissogates)}
-        >
-          ✈️{showMissogates && " missogates"}
-        </h3>
-        <h2 className="logo" onClick={() => setOnlyView(!onlyView)}>
-          MISSOPAD{" "}
-        </h2>
+      <PadHeader>
+        <MissoGatesLogo onClick={() => setShowMissogates(!showMissogates)}>
+          ✈️{showMissogates && " MissoGates"}
+        </MissoGatesLogo>
+
+        <HeaderTitle onClick={() => setOnlyView(!onlyView)}>
+          MISSOPAD
+        </HeaderTitle>
+
         {onlyView && "👀"}
-      </header>
+      </PadHeader>
 
       {showMissogates && <Tree />}
 
-      <div style={{ display: "flex", flexDirection: "row" }}>
+      <PadContainer>
         {!onlyView && (
-          <textarea
+          <Editor
             disabled={disabled}
             value={content}
             aria-multiline
@@ -138,39 +136,10 @@ function Pad() {
           />
         )}
 
-        <div
-          style={{
-            padding: 30,
-            width: onlyView ? "100vw" : "50vw",
-            height: "96vh",
-            overflowY: "scroll",
-          }}
-          className="markdown-body"
-        >
-          <ReactMarkdown
-            children={content}
-            remarkPlugins={[RemarkGfm, RemarkBreaks]}
-            components={{
-              code({ node, inline, className, children, ...props }) {
-                const match = /language-(\w+)/.exec(className || "");
-                return !inline && match ? (
-                  <SyntaxHighlighter
-                    children={String(children).replace(/\n$/, "")}
-                    style={dracula}
-                    language={match[1]}
-                    PreTag="div"
-                    {...props}
-                  />
-                ) : (
-                  <code className={className} {...props}>
-                    {children}
-                  </code>
-                );
-              },
-            }}
-          />
-        </div>
-      </div>
+        <Previewer onlyView={onlyView} className="markdown-body">
+          <MarkdownRenderer content={content} />
+        </Previewer>
+      </PadContainer>
     </div>
   );
 }
