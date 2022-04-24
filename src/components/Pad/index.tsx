@@ -60,8 +60,6 @@ function Pad() {
   useEffect(() => {
     if (!userId) return;
 
-    console.log("Hey!");
-
     const dbRef = ref(db, pathname);
 
     const unsubscribe = onValue(dbRef, (snapshot) => {
