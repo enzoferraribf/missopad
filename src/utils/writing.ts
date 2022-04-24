@@ -1,5 +1,5 @@
 import { ref, runTransaction, serverTimestamp } from "firebase/database";
-import { db } from "../services/firebase";
+import { db } from "services/firebase";
 
 interface Writing {
   content: string;
