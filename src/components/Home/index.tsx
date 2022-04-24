@@ -3,13 +3,17 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 import { signInAnonymously, auth } from "services/firebase";
 
+import { ExplorerForm, HomeContainer, Title } from "./styles";
+
 function Home() {
   const [document, setDocument] = useState<string>("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    signInAnonymously(auth);
+    if (!auth.currentUser) {
+      signInAnonymously(auth);
+    }
   }, []);
 
   function handleDocumentChange(e: ChangeEvent<HTMLInputElement>) {
@@ -20,59 +24,26 @@ function Home() {
 
   function handleFormSubmit(e: FormEvent) {
     e.preventDefault();
-
     navigate(`/${document}`);
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-        height: "80vh",
-        width: "100vw",
-      }}
-    >
-      <h1 style={{ marginBottom: "20px", fontSize: "10vw" }}>MISSOPAD</h1>
+    <HomeContainer>
+      <Title>MISSOPAD</Title>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-        }}
-      >
-        <form onSubmit={handleFormSubmit}>
-          <label style={{ fontSize: "5vw", marginRight: "10px" }}>
-            missopad.com/
-          </label>
+      <ExplorerForm onSubmit={handleFormSubmit}>
+        <label>missopad.com/</label>
 
-          <input
-            style={{ fontSize: "3vw", padding: "5px" }}
-            type="text"
-            placeholder="document..."
-            value={document}
-            onChange={handleDocumentChange}
-          />
+        <input
+          type="text"
+          value={document}
+          placeholder="document..."
+          onChange={handleDocumentChange}
+        />
 
-          <a
-            style={{
-              textDecoration: "none",
-              color: "black",
-              marginLeft: "10px",
-              fontSize: "3vw",
-              padding: "5px",
-              border: "1px solid black",
-              backgroundColor: "#eee",
-            }}
-            href={`/${document}`}
-          >
-            Go!
-          </a>
-        </form>
-      </div>
-    </div>
+        <a href={`/${document}`}>🚀</a>
+      </ExplorerForm>
+    </HomeContainer>
   );
 }
 
