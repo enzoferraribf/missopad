@@ -11,19 +11,15 @@
 
 ## Setup Firebase
 
-1) Run this command to install Firebase globally with npm.
+1. Run this command to install Firebase globally with yarn.
 
 ```
-npm install -g firebase-tools
-```
+npm install -g yarn
 
-2) Install firebase tools with yarn
-
-```
 yarn global add firebase-tools
 ```
 
-3) Login with your Firebase account
+2. Login with your Firebase account
 
 ```
 firebase login
@@ -37,7 +33,7 @@ Make sure you're on the root project folder
 
 **IMPORTANT: remove default firebase project from /.firebaserc**
 
-1) Init Firebase project
+1. Init Firebase project
 
 ```
 firebase init
@@ -50,7 +46,7 @@ It will prompt some questions:
     3) Select Authentication and Database Emulators
     4) Leave everything default and install emulator
 
-2) Get Credentials, copy and paste it on src/services/Firebase.ts
+2. Get Credentials, copy and paste it on src/services/Firebase.ts
 
 Note: don't commit this file changes into main
 
@@ -58,13 +54,13 @@ Note: don't commit this file changes into main
 firebase apps:sdkconfig
 ```
 
-3) Start the Firebase Emulator
+3. Start the Firebase Emulator
 
 ```
 firebase emulators:start
 ```
 
-4) Open Firebase UI, go to Database Realtime and copy the database URL then paste it in firebaseConfig
+4. Open Firebase UI, go to Database Realtime and copy the database URL then paste it in firebaseConfig
 
 Your firebase config should look like this:
 
@@ -76,12 +72,12 @@ const firebaseConfig = {
   apiKey: "AIzaSyCd1HXPPGgtlfxuJyFW0s6s4OWdp-DcWyM",
   authDomain: "cafapad-f91a5.firebaseapp.com",
   messagingSenderId: "642534084468",
-  measurementId: "G-JM36P6BECX",  
-  databaseURL: "http://localhost:9000/?ns=cafapad-f91a5"
+  measurementId: "G-JM36P6BECX",
+  databaseURL: "http://localhost:9000/?ns=cafapad-f91a5",
 };
 ```
 
-5) Restart Firebase Emulator
+5. Restart Firebase Emulator
 
 ## Testing Firebase Configuration
 

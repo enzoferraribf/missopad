@@ -12,9 +12,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
-          cache: "npm"
-      - run: npm i
-      - run: CI='' npm run build
+          cache: "yarn"
+      - run: yarn i
+      - run: CI='' yarn run build
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
