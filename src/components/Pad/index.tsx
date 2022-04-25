@@ -92,7 +92,7 @@ function Pad() {
       (alert as any).removeAll();
     }
 
-    const alertsActive = alert.alerts.length;
+    const alertsActive = (alert as any).alerts.length;
 
     if (disabled && !alertsActive) {
       alert.show("someone is typing");
