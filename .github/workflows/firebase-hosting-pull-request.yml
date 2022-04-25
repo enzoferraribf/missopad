@@ -13,8 +13,8 @@ jobs:
         with:
           node-version: "16"
           cache: "yarn"
-      - run: yarn i
-      - run: CI='' yarn run build
+      - run: yarn
+      - run: CI='' yarn build
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
