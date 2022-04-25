@@ -11,6 +11,7 @@ export const PadHeader = styled.header`
 
 export const HeaderTitle = styled.h1`
   color: #c9d1d9;
+  font-size: large;
 
   transition: all 0.3s ease;
 
@@ -22,7 +23,7 @@ export const HeaderTitle = styled.h1`
 
 export const MissoGatesLogo = styled.h3`
   position: absolute;
-  top: 10px;
+  top: -10px;
   left: 10px;
   z-index: 9999;
 

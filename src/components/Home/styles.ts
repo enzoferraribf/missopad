@@ -27,6 +27,12 @@ export const ExplorerForm = styled.form`
   input {
     font-size: 3vw;
     width: 20vw;
+
+    background-color: transparent;
+    border: none;
+    color: white;
+
+    outline: none;
   }
 
   a {

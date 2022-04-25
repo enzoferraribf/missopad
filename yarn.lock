@@ -9502,11 +9502,6 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-the-new-css-reset@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/the-new-css-reset/-/the-new-css-reset-1.5.1.tgz#6b68435f6d17180ee705db2f379c1f416e9ebef6"
-  integrity sha512-nLjRW4/RGtYRDPl6NE7TTuYg1T6Xi0/GmMDs0+cZA0b6d66k+aQ7sSNKKQsMivPYUTwswwtWvaWsNjE+UBiOpA==
-
 throat@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/throat/-/throat-6.0.1.tgz#d514fedad95740c12c2d7fc70ea863eb51ade375"
