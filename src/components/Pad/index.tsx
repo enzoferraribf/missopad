@@ -152,6 +152,7 @@ function Pad() {
               },
               readOnly: !loaded || disabled
             }}
+            className="editormonaco"
           />
         )}
 

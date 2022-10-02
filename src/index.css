@@ -1,8 +1,6 @@
 * {
   box-sizing: border-box;
   font-family: 'JetBrains Mono', monospace !important;
-  background-color: #0d1117 !important;
-  color: #ffffff !important;
 }
 
 /* width */
@@ -29,4 +27,8 @@ body {
 
 .cursor {
   background-color: #ffffff !important;
+}
+
+.editormonaco {
+  background-color: #0d1117 !important;
 }
