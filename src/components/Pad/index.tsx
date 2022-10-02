@@ -139,6 +139,7 @@ function Pad() {
             width="50vw"
             onChange={handleTextChange}
             defaultLanguage='markdown'
+            value={content}
             theme="vs-dark"
             loading={<></>}
             options={{
