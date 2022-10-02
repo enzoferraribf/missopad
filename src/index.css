@@ -29,3 +29,8 @@ body {
 .cursor {
   background-color: #ffffff !important;
 }
+
+
+.markdown-body {
+  color: #ffffff;
+}
