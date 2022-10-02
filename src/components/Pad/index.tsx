@@ -135,7 +135,7 @@ function Pad() {
       <PadContainer>
         {!onlyView && (
           <Editor
-            height="93vh"
+            height="95vh"
             width="50vw"
             onChange={handleTextChange}
             defaultLanguage='markdown'
