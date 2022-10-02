@@ -149,7 +149,7 @@ function Pad() {
                 top: 10,
                 bottom: 10
               },
-              readOnly: disabled
+              readOnly: !loaded || disabled
             }}
           />
         )}
