@@ -11,6 +11,7 @@ export const DrawerContainer = styled.div`
   overflow-y: scroll;
   overflow-x: hidden;
   background-color: #0d0f17;
+  z-index: 999;
 `;
 
 export const NonWrappableColumn = styled.div`

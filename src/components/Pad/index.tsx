@@ -10,13 +10,15 @@ import { lessThan } from "utils/time";
 
 import { Tree, MarkdownRenderer } from "components";
 import {
-  Editor,
+  //Editor,
   HeaderTitle,
   MissoGatesLogo,
   PadContainer,
   PadHeader,
   Previewer,
 } from "./styles";
+
+import Editor from '@monaco-editor/react'
 
 import { ServerDoc } from "types/ServerDoc";
 
@@ -27,6 +29,7 @@ function Pad() {
 
   const { pathname } = useLocation();
 
+  const [saved, setSaved] = useState(false);
   const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
   const [loaded, setLoaded] = useState(false);
@@ -45,7 +48,7 @@ function Pad() {
 
   const handleDisable = useCallback(
     (serverDoc: ServerDoc) => {
-      if (!userId) return;
+      if (!userId) setDisabled(true);
 
       const isDifferentAuthor = serverDoc.author !== userId;
 
@@ -99,12 +102,16 @@ function Pad() {
     }
   }, [alert, disabled]);
 
-  async function handleTextChange(e: ChangeEvent<HTMLTextAreaElement>) {
-    const text = e.target.value;
+  async function handleTextChange(value: string | undefined, e: ChangeEvent<HTMLTextAreaElement>) {
+    setSaved(false);
+
+    const text = value ?? e.target.value;
 
     if (!loaded) return;
 
     await handleWriting(pathname, { content: text, author: userId });
+
+    setSaved(true);
   }
 
   return (
@@ -118,7 +125,9 @@ function Pad() {
           MISSOPAD
         </HeaderTitle>
 
-        {onlyView && "👀"}
+        {saved ? "👌" : "⌛"}
+
+        {!loaded && <span style={{position: 'absolute', right: 20}}>loading...</span>}
       </PadHeader>
 
       {showMissogates && <Tree />}
@@ -126,11 +135,22 @@ function Pad() {
       <PadContainer>
         {!onlyView && (
           <Editor
-            disabled={disabled}
-            value={content}
-            aria-multiline
-            wrap="hard"
+            height="93vh"
+            width="50vw"
             onChange={handleTextChange}
+            defaultLanguage='markdown'
+            theme="vs-dark"
+            loading={<></>}
+            options={{
+              minimap: {
+                enabled: false,
+              },
+              padding: {
+                top: 10,
+                bottom: 10
+              },
+              readOnly: disabled
+            }}
           />
         )}
 
