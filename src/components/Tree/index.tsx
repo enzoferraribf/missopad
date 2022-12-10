@@ -4,17 +4,15 @@ import { DataSnapshot, get, ref } from "firebase/database";
 
 import { db } from "services/firebase";
 
-import { DrawerContainer, MissoGatesLogo, NonWrappableColumn, RouteLink } from "./styles";
+import { DrawerContainer, NonWrappableColumn, RouteLink } from "./styles";
 
 const ROOT_SYMBOL = ".\\";
 const CHILD_SYMBOL = "↳ ";
 
 function Tree() {
   const { pathname } = useLocation();
-  const [parentRoute, setParentRoute] = useState<DataSnapshot | null>(null);
-  const [myKey,setMyKey] = useState<string|null>(null);
+
   const [routes, setRoutes] = useState<DataSnapshot[]>([]);
-  const [showMissogates, setShowMissogates] = useState(false);
 
   useEffect(() => {
     const dbRef = ref(db, pathname);
@@ -22,16 +20,11 @@ function Tree() {
     async function handleRoutes() {
       const routes = await get(dbRef);
 
-      if (dbRef.parent) {
-        const parent = await get(dbRef.parent);
-        setParentRoute(parent)
-      }
-      setMyKey(routes.key)
       setRoutes(getDataSnapshotArray(routes));
     }
-    if (showMissogates)
-      handleRoutes();
-  }, [pathname, showMissogates]);
+
+    handleRoutes();
+  }, [pathname]);
 
   function getDataSnapshotArray(node: DataSnapshot): DataSnapshot[] {
     const children: DataSnapshot[] = [];
@@ -46,33 +39,21 @@ function Tree() {
   }
 
   function getTree() {
-    return <>
-      {parentRoute?.key && <NonWrappableColumn>
-
-        <RouteLink href={`${pathname.replace(`/${myKey}`, "")}`} level={1}>
-          {"↰ " + parentRoute.key}
-        </RouteLink>
-      </NonWrappableColumn>
-      }
-      {
-        routes
-          .filter(({ size }) => size > 0)
-          .map((route) => (
-            <NonWrappableColumn>{mountTree(route,"", parentRoute?.key? 2:1,true )}</NonWrappableColumn>
-          ))
-      }
-    </>
+    return routes
+      .filter(({ size }) => size > 0)
+      .map((route) => (
+        <NonWrappableColumn>{mountTree(route)}</NonWrappableColumn>
+      ));
   }
 
   function getRouteLink(
     route: DataSnapshot,
     subpath: string = "",
-    level: number = 1,
-    root: boolean = false
+    level: number = 1
   ) {
     return (
       <RouteLink href={`${pathname}${subpath}\\${route.key}`} level={level}>
-        {(root? ROOT_SYMBOL : CHILD_SYMBOL) + route.key}
+        {(level === 1 ? ROOT_SYMBOL : CHILD_SYMBOL) + route.key}
       </RouteLink>
     );
   }
@@ -80,40 +61,29 @@ function Tree() {
   function mountTree(
     node: DataSnapshot,
     subpath: string = "",
-    recursion: number = 1,
-    root: boolean = false
+    recursion: number = 1
   ): JSX.Element {
-    if (recursion > 4) return <></>;
+    if (recursion > 3) return <></>;
 
     const children: DataSnapshot[] = getDataSnapshotArray(node);
 
     return (
       <>
-        {getRouteLink(node, subpath, recursion++,root)}
+        {getRouteLink(node, subpath, recursion++)}
 
         {children.map((route) =>
-          mountTree(route, subpath + "/" + node.key, recursion,false)
+          mountTree(route, subpath + "/" + node.key, recursion)
         )}
       </>
     );
   }
 
-
   return (
-    <>
-      <MissoGatesLogo onClick={() => setShowMissogates(!showMissogates)}>
-        ✈️ {showMissogates && " MissoGates"}
-      </MissoGatesLogo>
+    <DrawerContainer>
+      {getTree()}
 
-      {
-        showMissogates && <DrawerContainer>
-          {routes.length === 0 ? <p>No gates here :(</p> : getTree()}
-        </DrawerContainer>
-      }
-
-    </>
-
-
+      {routes.length === 0 && <p>no gates here :(</p>}
+    </DrawerContainer>
   );
 }
 

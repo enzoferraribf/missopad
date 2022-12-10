@@ -21,6 +21,19 @@ export const HeaderTitle = styled.h1`
   }
 `;
 
+export const MissoGatesLogo = styled.h3`
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  z-index: 9999;
+
+  transition: all 0.3s ease;
+
+  :hover {
+    cursor: pointer;
+    opacity: 0.7;
+  }
+`;
 
 export const PadContainer = styled.div`
   display: flex;
