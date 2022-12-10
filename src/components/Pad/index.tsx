@@ -12,7 +12,6 @@ import { Tree, MarkdownRenderer } from "components";
 import {
   //Editor,
   HeaderTitle,
-  MissoGatesLogo,
   PadContainer,
   PadHeader,
   Previewer,
@@ -35,7 +34,7 @@ function Pad() {
   const [loaded, setLoaded] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [onlyView, setOnlyView] = useState(false);
-  const [showMissogates, setShowMissogates] = useState(false);
+ 
 
   useEffect(() => {
     async function signIn() {
@@ -116,10 +115,9 @@ function Pad() {
 
   return (
     <div>
+      <Tree />
+
       <PadHeader>
-        <MissoGatesLogo onClick={() => setShowMissogates(!showMissogates)}>
-          ✈️{showMissogates && " MissoGates"}
-        </MissoGatesLogo>
 
         <HeaderTitle onClick={() => setOnlyView(!onlyView)}>
           MISSOPAD
@@ -129,8 +127,6 @@ function Pad() {
 
         {!loaded && <span style={{position: 'absolute', right: 20}}>loading...</span>}
       </PadHeader>
-
-      {showMissogates && <Tree />}
 
       <PadContainer>
         {!onlyView && (
