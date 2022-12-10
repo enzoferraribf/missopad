@@ -3,13 +3,13 @@ import { connectDatabaseEmulator, getDatabase } from "firebase/database";
 import { signInAnonymously, getAuth, connectAuthEmulator } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA5N8-mNK6_AXa-cyxl1sJZEDpdhzxcclI",
-  authDomain: "missopad-mahlik.firebaseapp.com",
-  projectId: "missopad-mahlik",
-  storageBucket: "missopad-mahlik.appspot.com",
-  messagingSenderId: "1050920301843",
-  appId: "1:1050920301843:web:0e4c77390a6d0a125556e6",
-  databaseURL: "http://127.0.0.1:9000/?ns=missopad-mahlik",
+  apiKey: "AIzaSyDblWst7F3bynCSVn9IX_t_TmLhdjJ7xWU",
+  authDomain: "missopad-e13a9.firebaseapp.com",
+  databaseURL: "https://missopad-e13a9-default-rtdb.firebaseio.com",
+  projectId: "missopad-e13a9",
+  storageBucket: "missopad-e13a9.appspot.com",
+  messagingSenderId: "502498677789",
+  appId: "1:502498677789:web:0f4a46c9290bc4c8d222f4",
 };
 
 const app = initializeApp(firebaseConfig);
