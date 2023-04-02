@@ -109,8 +109,6 @@ function Pad() {
     return () => clearInterval(isRemoteInterval);
   }, [editor, currentJson]);
 
-  console.log(JSON.stringify(editor?.getJSON()));
-
   return (
     <div>
       <Tree />
