@@ -3,7 +3,6 @@ import { db } from "services/firebase";
 
 interface Writing {
   content: string;
-  author: string;
 }
 
 export async function handleWriting(pathname: string, writing: Writing) {

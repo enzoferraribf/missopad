@@ -5,11 +5,13 @@ export const HomeContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 80vh;
+  height: 100vh;
   width: 100vw;
+  background-color: #0D1117;
 `;
 
 export const Title = styled.h1`
+margin-top: -2rem;
   font-size: 8vw;
 `;
 
@@ -21,11 +23,11 @@ export const ExplorerForm = styled.form`
   align-items: baseline;
 
   label {
-    font-size: 3vw;
+    font-size: 2vw;
   }
 
   input {
-    font-size: 3vw;
+    font-size: 2vw;
     width: 20vw;
 
     background-color: transparent;
@@ -38,7 +40,7 @@ export const ExplorerForm = styled.form`
   a {
     margin-left: 10px;
 
-    font-size: 3vw;
+    font-size: 2vw;
     text-decoration: none;
     transition: all 0.3s ease;
 
