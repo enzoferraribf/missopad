@@ -1,7 +1,6 @@
 * {
   box-sizing: border-box;
-  font-family: 'JetBrains Mono', monospace !important;
-  background-color: #0d1117 !important;
+  font-family: "JetBrains Mono", monospace;
 }
 
 /* width */
@@ -22,15 +21,64 @@
 }
 
 body {
+  color: #ffffff;
+  border: none;
+  margin: 0;
+}
+
+.ProseMirror {
+  height: 96vh;
+  padding: 1rem;
+  width: 50vw;
   background-color: #0d1117;
-  color: #ffffff;
+  color: #fff;
+  font-family: "JetBrains Mono", monospace;
+  overflow-y: scroll;
 }
 
-.cursor {
-  background-color: #ffffff !important;
+@media (max-width: 768px) {
+  .ProseMirror {
+    height: 50vh;
+    padding: 1rem;
+    width: 100vw;
+    background-color: #0d1117;
+    color: #fff;
+    font-family: "JetBrains Mono", monospace;
+    overflow-y: scroll;
+  }
 }
 
+*:focus {
+  outline: none;
+}
 
-.markdown-body {
-  color: #ffffff;
+/* Give a remote user a caret */
+.collaboration-cursor__caret {
+  border-left: 1px solid #0d0d0d;
+  border-right: 1px solid #0d0d0d;
+  margin-left: -1px;
+  margin-right: -1px;
+  pointer-events: none;
+  position: relative;
+  word-break: normal;
+}
+
+/* Render the username above the caret */
+.collaboration-cursor__label {
+  border-radius: 3px 3px 3px 0;
+  color: #0d0d0d;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  left: -1px;
+  line-height: normal;
+  padding: 0.1rem 0.3rem;
+  position: absolute;
+  top: -1.4em;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.firebase-emulator-warning {
+  display: none;
 }
