@@ -46,6 +46,8 @@ export const Previewer = styled.div<PreviewerProps>`
   height: 96vh;
   overflow-y: scroll;
 
+  background-color: #0d1117;
+
   @media (max-width: 768px) {
     flex-direction: column;
     height: ${(props) => (props.onlyView ? "100vh" : "46vh")};

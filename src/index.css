@@ -82,3 +82,7 @@ body {
 .firebase-emulator-warning {
   display: none;
 }
+
+.markdown-body {
+  background-color: #0d1117;
+}

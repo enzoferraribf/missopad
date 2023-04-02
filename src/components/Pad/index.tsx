@@ -93,11 +93,11 @@ function Pad() {
 
       const snapshot = await get(dbRef);
 
-      const content = snapshot.val()?.content || "";
+      const content: string = snapshot.val()?.content || "";
 
-      console.log(content);
-
-      if (!editor?.getText()) {
+      if (!content.startsWith('{"type":"doc"')) {
+        editor?.chain().setContent(content).run();
+      } else if (!editor?.getText()) {
         editor?.chain().setContent(JSON.parse(content)).run();
       }
     }
@@ -108,6 +108,8 @@ function Pad() {
 
     return () => clearInterval(isRemoteInterval);
   }, [editor, currentJson]);
+
+  console.log(JSON.stringify(editor?.getJSON()));
 
   return (
     <div>
