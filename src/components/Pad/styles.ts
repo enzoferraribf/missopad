@@ -4,9 +4,12 @@ export const PadHeader = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: row;
 
-  width: 99vw;
-  height: 3vh;
+  width: 100vw;
+  height: 4vh;
+
+  background-color: #0D1117;
 `;
 
 export const HeaderTitle = styled.h1`
@@ -21,23 +24,16 @@ export const HeaderTitle = styled.h1`
   }
 `;
 
-
 export const PadContainer = styled.div`
   display: flex;
   flex-direction: row;
-`;
-
-export const Editor = styled.textarea`
-  border: 3px;
-  outline: none;
-  resize: none;
-  width: 50vw;
-  height: 96vh;
-  overflow-y: scroll;
-  white-space: pre-wrap;
+  width: 100vw;
   background-color: #0d1117;
-  color: #c9d1d9;
-  padding: 30px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    height: 100vh;
+  }
 `;
 
 export interface PreviewerProps {
@@ -49,4 +45,13 @@ export const Previewer = styled.div<PreviewerProps>`
   width: ${(props) => (props.onlyView ? "100vw" : "50vw")};
   height: 96vh;
   overflow-y: scroll;
+
+  background-color: #0d1117;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    height: ${(props) => (props.onlyView ? "100vh" : "46vh")};
+    width: 100vw;
+    border-top: 3px solid #191F29;
+  }
 `;

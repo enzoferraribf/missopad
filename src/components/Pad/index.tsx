@@ -1,158 +1,153 @@
-import { useAlert } from "react-alert";
-import { useLocation } from "react-router-dom";
-import { get, onValue, ref } from "firebase/database";
-import { useEffect, ChangeEvent, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
+import { get, ref } from "firebase/database";
+
+import { nanoid } from "nanoid";
+import { hex } from "@vid3v/random-color";
+
+import * as Y from "yjs";
+import { WebrtcProvider } from "y-webrtc";
+
+import StarterKit from "@tiptap/starter-kit";
+import Collaboration from "@tiptap/extension-collaboration";
+import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
+import { EditorContent, useEditor } from "@tiptap/react";
 
 import { auth, db, signInAnonymously } from "services/firebase";
 
 import { handleWriting } from "utils/writing";
-import { lessThan } from "utils/time";
 
 import { Tree, MarkdownRenderer } from "components";
-import {
-  //Editor,
-  HeaderTitle,
-  PadContainer,
-  PadHeader,
-  Previewer,
-} from "./styles";
 
-import Editor from '@monaco-editor/react'
+import { HeaderTitle, PadContainer, PadHeader, Previewer } from "./styles";
 
-import { ServerDoc } from "types/ServerDoc";
+const PATH = window.location.pathname;
+const SAVE_INTERVAL = 2000;
+const ISCONNECTED_POLLING = 200;
 
-const POLL_TIME = 3000;
+const collabDocument = new Y.Doc();
+const collabProvider = new WebrtcProvider(PATH, collabDocument);
+const id = nanoid(4);
+const color = hex();
 
 function Pad() {
-  const alert = useAlert();
-
-  const { pathname } = useLocation();
-
-  const [saved, setSaved] = useState(false);
-  const [content, setContent] = useState("");
   const [userId, setUserId] = useState("");
-  const [loaded, setLoaded] = useState(false);
-  const [disabled, setDisabled] = useState(false);
+  const [currentJson, setCurrentJson] = useState("");
+  const [isConnected, setIsConnected] = useState(false);
   const [onlyView, setOnlyView] = useState(false);
- 
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({
+        history: false,
+        blockquote: false,
+        code: false,
+        bold: false,
+        bulletList: false,
+        codeBlock: false,
+        hardBreak: false,
+        heading: false,
+        horizontalRule: false,
+        italic: false,
+        orderedList: false,
+        strike: false,
+      }),
+      Collaboration.configure({ document: collabDocument }),
+      CollaborationCursor.configure({
+        provider: collabProvider,
+        user: { name: id, color: color },
+      }),
+    ],
+  });
 
   useEffect(() => {
     async function signIn() {
       const { user } = await signInAnonymously(auth);
+
       setUserId(user.uid);
     }
 
+    function isConnected() {
+      setIsConnected(collabProvider.connected);
+    }
+
+    const isConnectedInterval = setInterval(isConnected, ISCONNECTED_POLLING);
+
     signIn();
+
+    return () => clearInterval(isConnectedInterval);
   }, []);
 
-  const handleDisable = useCallback(
-    (serverDoc: ServerDoc) => {
-      if (!userId) setDisabled(true);
-
-      const isDifferentAuthor = serverDoc.author !== userId;
-
-      const newDisabled =
-        isDifferentAuthor && lessThan(serverDoc.updatedAt, POLL_TIME);
-
-      setDisabled(newDisabled);
-    },
-    [userId]
-  );
-
   useEffect(() => {
-    if (!userId) return;
+    async function saveToRemote() {
+      const json = editor?.getJSON();
 
-    const dbRef = ref(db, pathname);
+      if (!json || JSON.stringify(json) === currentJson) return;
 
-    const unsubscribe = onValue(dbRef, (snapshot) => {
-      setLoaded(true);
+      await handleWriting(PATH, { content: JSON.stringify(json) });
 
-      if (!snapshot) return;
+      setCurrentJson(JSON.stringify(json));
+    }
 
-      const serverDoc: ServerDoc = snapshot.val();
+    async function getInitialContent() {
+      const dbRef = ref(db, PATH);
 
-      setContent(serverDoc.content);
-      handleDisable(serverDoc);
-    });
-
-    const interval = setInterval(async () => {
       const snapshot = await get(dbRef);
 
-      const serverDoc: ServerDoc = snapshot.val();
+      const content: string = snapshot.val()?.content || "";
 
-      handleDisable(serverDoc);
-    }, POLL_TIME);
-
-    return () => {
-      unsubscribe();
-      clearInterval(interval);
-    };
-  }, [pathname, userId, handleDisable]);
-
-  useEffect(() => {
-    if (!disabled) {
-      (alert as any).removeAll();
+      if (!content.startsWith('{"type":"doc"')) {
+        editor?.chain().setContent(content).run();
+      } else if (!editor?.getText()) {
+        editor?.chain().setContent(JSON.parse(content)).run();
+      }
     }
 
-    const alertsActive = (alert as any).alerts.length;
+    const isRemoteInterval = setInterval(saveToRemote, SAVE_INTERVAL);
 
-    if (disabled && !alertsActive) {
-      alert.show("someone is typing");
-    }
-  }, [alert, disabled]);
+    getInitialContent();
 
-  async function handleTextChange(value: string | undefined, e: ChangeEvent<HTMLTextAreaElement>) {
-    setSaved(false);
-
-    const text = value ?? e.target.value;
-
-    if (!loaded) return;
-
-    await handleWriting(pathname, { content: text, author: userId });
-
-    setSaved(true);
-  }
+    return () => clearInterval(isRemoteInterval);
+  }, [editor, currentJson]);
 
   return (
     <div>
       <Tree />
 
       <PadHeader>
-
         <HeaderTitle onClick={() => setOnlyView(!onlyView)}>
           MISSOPAD
         </HeaderTitle>
 
-        {saved ? "👌" : "⌛"}
+        <div
+          style={{
+            width: "1vh",
+            height: "1vh",
+            backgroundColor: userId && isConnected ? "green" : "red",
+            borderRadius: "50%",
+            marginLeft: "1vh",
+          }}
+        />
 
-        {!loaded && <span style={{position: 'absolute', right: 20}}>loading...</span>}
+        <div
+          style={{
+            backgroundColor: color,
+            borderRadius: "4px",
+            marginRight: "1vh",
+            position: "absolute",
+            right: 10,
+          }}
+        >
+          <span style={{ padding: "5px" }}>{id}</span>
+        </div>
       </PadHeader>
 
       <PadContainer>
         {!onlyView && (
-          <Editor
-            height="95vh"
-            width="50vw"
-            onChange={handleTextChange}
-            defaultLanguage='markdown'
-            value={content}
-            theme="vs-dark"
-            loading={<></>}
-            options={{
-              minimap: {
-                enabled: false,
-              },
-              padding: {
-                top: 10,
-                bottom: 10
-              },
-              readOnly: !loaded || disabled
-            }}
-          />
+          <EditorContent disabled={!userId || !isConnected} editor={editor} />
         )}
 
         <Previewer onlyView={onlyView} className="markdown-body">
-          <MarkdownRenderer content={content} />
+          <MarkdownRenderer content={editor?.getText()!} />
         </Previewer>
       </PadContainer>
     </div>

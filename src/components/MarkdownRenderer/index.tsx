@@ -1,6 +1,7 @@
 import RemarkGfm from "remark-gfm";
 import RemarkBreaks from "remark-breaks";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -16,7 +17,8 @@ function MarkdownRenderer({ content }: MarkdownRendererProps) {
     <ReactMarkdown
       children={content}
       remarkPlugins={[RemarkGfm, RemarkBreaks]}
-      
+      rehypePlugins={[rehypeRaw]}
+      className="markdown-body"
       components={{
         code({ node, inline, className, children, ...props }) {
           const match = /language-(\w+)/.exec(className || "");
